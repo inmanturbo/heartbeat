@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/sh
 if [ -z "$1" ] ;
 then
  echo Specify a virtual-machine name.
@@ -11,16 +11,9 @@ then
  exit 1
 fi
 
-# virsh start ${1} || { echo 'Host did not start. Check logs' ; exit 1; }
-
-# until virsh pool-start ${2}
-# do
-#   echo "Storage host not ready"
-# done
-
 ### Restore Vms: ####
 
-# Get all running vms not allready running
+# Get all running vms
 for VM in $(virsh list --name) 
 do
   # Attempt to Save them
@@ -29,44 +22,40 @@ do
   fi
 done
 
-virsh list > /root/scripts/saved-vms.txt;
+virsh list > /root/saved-vms.txt;
 virsh list;
 
-# Get all running vms not allready running
+# Get all running vms
 for VM in $(virsh list --name) 
 do
-  # Attempt to Save them
+  # Attempt to shutdown those which could not be saved
+   if [[ ! "$VM" == "${1}" ]] ; then
+  virsh shutdown "$VM"
+  fi
+done
+
+virsh list > /root/scripts/shutdown-vms.txt;
+virsh list;
+
+# Get all running vms
+for VM in $(virsh list --name) 
+do
+  # Kill the ones that possibly hung
+  # remember the important thing
+  # is to free up the zfs pool
    if [[ ! "$VM" == "${1}" ]] ; then
   virsh destroy "$VM"
   fi
 done
 
-virsh list > /root/scripts/killed-vms.txt;
+virsh list > /root/killed-vms.txt;
 virsh list;
 
 
 virsh pool-destroy ${2}
-virsh destroy ${1}
-# do
-#   echo "Storage host not ready"
-# done
+virsh shutdown ${1}
 
 exit 0;
-# /usr/local/emhttp/webGui/scripts/notify -i normal -s "Veeam done - VMs started"
 
 
 
-#until $(ping 192.168.254.254); do :; done
-# until $(virsh pool-start QWPro); do echo "host not up" :; done
-#virsh pool-start QWPro
-
-# cancelled=false    # Keep track of whether the loop was cancelled, or succeeded
-# until ping -c1 "$1" >/dev/null 2>&1; do :; done &    # The "&" backgrounds it
-# trap "kill $!; ping_cancelled=true" SIGINT
-# wait $!          # Wait for the loop to exit, one way or another
-# trap - SIGINT    # Remove the trap, now we're done with it
-# echo "Done pinging, cancelled=$cancelled"
-
-# virsh pool-start QWPro
-# #sleep 60;
-# #virsh start centos8;
