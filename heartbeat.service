@@ -1,23 +1,14 @@
 [Unit]
 Description=Suspend Running libvirt Guests before libvirt-guests
 Wants=libvirtd.service
-#Requires=virt-guest-shutdown.target
 After=network.target
-#After=time-sync.target
 After=libvirt-guests.service
-#After=virt-guest-shutdown.target
-#Documentation=man:libvirtd(8)
-#Documentation=https://libvirt.org
 
 [Service]
-#EnvironmentFile=-/etc/sysconfig/libvirt-guests
 EnvironmentFile=-/etc/profile.d/libvirt.sh
 # Hack just call traditional service until we factor
 # out the code
-#ExecStart=/usr/libexec/libvirt-guests.sh start
-#ExecStart=/bin/true
 ExecStart=/usr/local/heartbeat_up.sh ${VIRT_NAS} ${VIRT_NAS_POOL}
-#ExecStop=/usr/libexec/libvirt-guests.sh stop
 ExecStop=/usr/local/heartbeat_down.sh ${VIRT_NAS} ${VIRT_NAS_POOL}
 Type=oneshot
 RemainAfterExit=yes
