@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/sh
 
 if [ -z "$1" ] ;
 then
@@ -21,10 +21,10 @@ done
 
 ### Restore Vms: ####
 
-# Get all running vms not allready running
+# Get all saved vms
 for VM in $(virsh list --all --with-managed-save --name) 
 do
-  # Start them
+  # Restore them
   virsh restore "$VM"
 done
 
@@ -33,8 +33,8 @@ virsh list;
 
 ### Start Vms: ####
 
-# Get all running vms not allready running
-for VM in $(virsh list --all --autostart --name) 
+# Get all vms marked for autostart which are not allready running
+for VM in $(virsh list --autostart --inactive --name) 
 do
   # Start them
   virsh start "$VM"
