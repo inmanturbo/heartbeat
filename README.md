@@ -8,7 +8,7 @@ And will make sure they go down before the nas and its pool, such as in the case
 
 ### Caveat:
 This service is only intended to protect data in the case of an outage, and reduce startup errors. It assumes the vms have no application level dependencies.
-However you can easily add to the scripts if you have some other startup shutdown ordering that needs to be done, such as starting a database before a webserver, etc.
+However you can easily add to the scripts if you have some additional startup and shutdown requirements, such as starting a database before a webserver, etc.
 
 ## Installation
 clone the repo, cd into repo and run 
