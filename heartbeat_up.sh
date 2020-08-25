@@ -28,7 +28,7 @@ do
   virsh restore "$VM"
 done
 
-virsh list > /root/scripts/restored-vms.txt;
+virsh list > /root/restored-vms.txt;
 virsh list;
 
 ### Start Vms: ####
@@ -40,7 +40,7 @@ do
   virsh start "$VM"
 done
 
-virsh list > /root/scripts/started-vms.txt;
+virsh list > /root/started-vms.txt;
 virsh list;
 
 exit 0;
